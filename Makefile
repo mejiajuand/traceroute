@@ -25,8 +25,8 @@ $(REL):
 	mkdir -p $(REL)
 
 release: $(REL) $(SRC)
-	$(CC) $(CFLAGS) -O2 -pipe -fPIE -U_FORTIFY_SOURCE \
-	-D_FORTIFY_SOURCE=3 $(SRC) -o $(REL)/$(BIN)
+	$(CC) $(CFLAGS) -O2 -DNDEBUG -pipe -fPIE -pie \
+	-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 $(SRC) -o $(REL)/$(BIN)
 
 run:
 	./$(DBG)/$(BIN)
