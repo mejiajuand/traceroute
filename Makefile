@@ -1,8 +1,12 @@
 CC=cc
 WARNINGS=-Wall -Wextra -Wpedantic -Wshadow -Wconversion \
--Wsign-conversion -Wformat -Wformat=2 -Wstrict-prototypes \
--Wmissing-prototypes
-CFLAGS=$(WARNINGS) -fno-omit-frame-pointer
+-Wsign-conversion -Wformat -Wformat=2 -Wformat-security \
+-Wstrict-prototypes -Wmissing-prototypes -Wcast-align \
+-Wundef -Wwrite-strings -Werror=format-security \
+-Werror=implicit -Werror=incompatible-pointer-types \
+-Werror=int-conversion
+CFLAGS=$(WARNINGS) -fstack-protector-strong -fno-common \
+-fstack-clash-protection -ftrivial-auto-var-init=zero
 SRC=src/main.c
 DBG=bin/debug
 REL=bin/release
@@ -14,13 +18,15 @@ $(DBG):
 	mkdir -p $(DBG)
 
 $(DBG)/$(BIN): $(SRC)
-	$(CC) -g3 -O0 $(CFLAGS) $(SRC) -o $(DBG)/$(BIN)
+	$(CC) $(CFLAGS) -g3 -O0 -fno-omit-frame-pointer \
+	$(SRC) -o $(DBG)/$(BIN)
 
 $(REL):
 	mkdir -p $(REL)
 
 release: $(REL) $(SRC)
-	$(CC) -O2 $(CFLAGS) $(SRC) -o $(REL)/$(BIN)
+	$(CC) $(CFLAGS) -O2 -pipe -fPIE -U_FORTIFY_SOURCE \
+	-D_FORTIFY_SOURCE=3 $(SRC) -o $(REL)/$(BIN)
 
 run:
 	./$(DBG)/$(BIN)
