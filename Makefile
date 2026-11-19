@@ -14,13 +14,13 @@ $(DBG):
 	mkdir -p $(DBG)
 
 $(DBG)/$(BIN): $(SRC)
-	$(CC) $(CFLAGS) -g3 -O0 $(SRC) -o $(DBG)/$(BIN)
+	$(CC) -g3 -O0 $(CFLAGS) $(SRC) -o $(DBG)/$(BIN)
 
 $(REL):
 	mkdir -p $(REL)
 
 release: $(REL) $(SRC)
-	$(CC) $(CFLAGS) -O2 -DNDEBUG $(SRC) -o $(REL)/$(BIN)
+	$(CC) -O2 $(CFLAGS) $(SRC) -o $(REL)/$(BIN)
 
 run:
 	./$(DBG)/$(BIN)
