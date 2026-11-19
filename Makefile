@@ -12,21 +12,23 @@ DBG=bin/debug
 REL=bin/release
 BIN=traceroute
 
-all: $(DBG) $(DBG)/$(BIN)
+all: $(DBG)/$(BIN)
 
 $(DBG):
 	mkdir -p $(DBG)
 
-$(DBG)/$(BIN): $(SRC)
+$(DBG)/$(BIN): $(DBG) $(SRC)
 	$(CC) $(CFLAGS) -g3 -O0 -fno-omit-frame-pointer \
 	$(SRC) -o $(DBG)/$(BIN)
 
 $(REL):
 	mkdir -p $(REL)
 
-release: $(REL) $(SRC)
+$(REL)/$(BIN): $(REL) $(SRC)
 	$(CC) $(CFLAGS) -O2 -DNDEBUG -pipe -fPIE -pie \
 	-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 $(SRC) -o $(REL)/$(BIN)
+
+release: $(REL)/$(BIN)
 
 run:
 	./$(DBG)/$(BIN)
